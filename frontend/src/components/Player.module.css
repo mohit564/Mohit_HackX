@@ -1,0 +1,15 @@
+div[data-player] {
+  height: 240px !important;
+}
+
+svg {
+  margin: 0 auto;
+}
+
+@media (min-width: 40rem) {
+  div[data-player] {
+    width: 80% !important;
+    height: 540px !important;
+    margin: auto !important;
+  }
+}

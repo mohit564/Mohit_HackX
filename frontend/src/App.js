@@ -1,9 +1,13 @@
 ﻿import React from "react";
 
+import Navbar from "./components/Navbar";
+import Player from "./components/Player";
+
 const App = () => {
   return (
     <>
-      <h1 className="text-red-500">Hello World</h1>
+      <Navbar />
+      <Player />
     </>
   );
 };
