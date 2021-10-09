@@ -1,11 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <header className="bg-gray-800 text-white">
-      <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
-        <button className="text-2xl">Mohit HackX</button>
-        <button className="text-xl">TV Channels</button>
+    <header className="text-white bg-gray-800">
+      <nav className="container px-6 py-3 mx-auto">
+        <Link to="/" className="text-2xl">
+          Mohit HackX
+        </Link>
       </nav>
     </header>
   );

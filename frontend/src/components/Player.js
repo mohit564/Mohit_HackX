@@ -1,46 +1,43 @@
-import React, { useEffect } from "react";
-import Clappr from "clappr";
-import LevelSelector from "@guzzj/clappr-level-selector-plugin";
-import ClapprPIPPlugin from "@guzzj/clappr-pip-plugin";
-import DashShakaPlayback from "dash-shaka-playback";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import "./Player.module.css";
 
+import Loading from "./Loading";
+import ClapprComponent from "./ClapprComponent";
+import { fetchData } from "../utils/fetchData";
+
+const URL = process.env.REACT_APP_BACKEND_URL;
+
 const Player = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [channel, setChannel] = useState({
+    name: "",
+    image: "",
+    source: "",
+  });
+  const { channelId } = useParams();
+
   useEffect(() => {
-    const source =
-      "https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8";
+    setIsLoading(true);
 
-    let player = new Clappr.Player({
-      parentId: "#player",
-      source: source,
-      width: "100%",
-      mimeType: "application/x-mpegURL",
-      plugins: [LevelSelector, ClapprPIPPlugin, DashShakaPlayback],
-      autoPlay: true,
-      crossOrigin: "anonymous",
-      shakaConfiguration: {
-        manifest: { retryParameters: { maxAttempts: Infinity } },
-        streaming: {
-          lowLatencyMode: true,
-          inaccurateManifestTolerance: 0,
-          rebufferingGoal: 0.01,
-          retryParameters: { maxAttempts: Infinity },
-        },
-        drm: { retryParameters: { maxAttempts: Infinity } },
-      },
-    });
-
-    return () => {
-      player.destroy();
-      player = null;
-    };
+    fetchData(`${URL}/${channelId}`)
+      .then((data) => {
+        setChannel(data);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setIsLoading(false));
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <main className="min-h-screen bg-gray-900 text-white ">
-      <section className="container mx-auto px-6 py-6">
-        <h2 className="text-2xl text-center mb-6">Sample Video</h2>
-        <div id="player" className="w-full h-full mx-auto"></div>
+    <main className="min-h-screen text-white bg-gray-900 ">
+      <section className="container px-6 py-6 mx-auto">
+        <h2 className="mb-6 text-2xl text-center">{channel.name}</h2>
+        <ClapprComponent id={"video"} source={channel.source} />
       </section>
     </main>
   );
